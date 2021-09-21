@@ -1,0 +1,39 @@
+{
+    "name": "jordibisbal/functional-php",
+    "description": "Functional primitives for PHP",
+    "version": "0.1.1",
+    "keywords": [
+        "functional"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jordi Bisbal",
+            "email": "jordi.bisbal+functional@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "~7.1",
+        "lstrojny/functional-php": "^1.17"
+    },
+    "require-dev": {
+        "roave/security-advisories": "dev-latest",
+        "squizlabs/php_codesniffer": "~3.0",
+        "friendsofphp/php-cs-fixer": "^2.17",
+        "jetbrains/phpstorm-attributes": "^1.0",
+        "infection/infection": "^0.23.0",
+        "phpunit/phpunit": "^9.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "jbisbal\\specification\\": "src/specification"
+        }
+    },
+    "autoload-dev": {
+    },
+    "scripts": {
+        "tests": "vendor/bin/phpunit",
+        "coding-style": "vendor/bin/phpcs && vendor/bin/php-cs-fixer fix --dry-run --diff --config=.php_cs.dist",
+        "clear": "rm -rf vendor/"
+    }
+}
