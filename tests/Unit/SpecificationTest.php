@@ -14,6 +14,7 @@ use jbisbal\specification\Test\Unit\Stubs\BooleanSpecification;
 use jbisbal\specification\Test\Unit\Stubs\IdentitySpecification;
 use PHPUnit\Framework\TestCase;
 
+/** @SuppressWarnings(PHPMD.ExcessivePublicCount) */
 final class SpecificationTest extends TestCase
 {
     private const A_VALUE = 'a value';
@@ -149,11 +150,8 @@ final class SpecificationTest extends TestCase
     public function testCanBuildAnExpression()
     {
         $identitySpecification = IdentitySpecification::create();
-        $identifyBuilder = Identity::create();
+        $resolveIdentity = $identitySpecification->expressionBuilder(Identity::create());
 
-        self::assertEquals(
-            self::A_VALUE,
-            $identitySpecification->asExpression(self::A_VALUE, $identifyBuilder)
-        );
+        self::assertEquals(self::A_VALUE, $resolveIdentity(self::A_VALUE));
     }
 }
