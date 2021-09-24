@@ -27,8 +27,8 @@
     },
     "autoload": {
         "psr-4": {
-            "jbisbal\\specification\\": "src",
-            "jbisbal\\specification\\Test\\": "tests"
+            "jbisbal\\specification\\Test\\": "tests",
+            "jbisbal\\specification\\": "src"
         }
     },
     "autoload-dev": {

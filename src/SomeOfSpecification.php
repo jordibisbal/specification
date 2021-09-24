@@ -4,17 +4,19 @@ declare(strict_types=1);
 
 namespace jbisbal\specification;
 
+use function Functional\some;
+
 /**
  * @template Type
  * @extends Specification<Type>
  */
-final class AndSpecification extends BinarySpecification
+final class SomeOfSpecification extends CompositeSpecification
 {
     /**
      * {@inheritdoc}
      */
     public function isSatisfiedBy($object): bool
     {
-        return $this->one()->isSatisfiedBy($object) && $this->other()->isSatisfiedBy($object);
+        return some($this->specifications, $this->isSatisfiedByFn($object));
     }
 }

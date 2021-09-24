@@ -4,43 +4,44 @@ declare(strict_types=1);
 
 namespace jbisbal\specification\Test\Unit;
 
-use jbisbal\specification\Test\Unit\Stubs\BoolSpecification;
+use jbisbal\specification\AllOfSpecification;
+use jbisbal\specification\NoneOfSpecification;
+use jbisbal\specification\SomeOfSpecification;
+use jbisbal\specification\Test\Unit\Stubs\BinarySpecification;
+use jbisbal\specification\Test\Unit\Stubs\BooleanSpecification;
 use PHPUnit\Framework\TestCase;
 
 final class SpecificationTest extends TestCase
 {
     public function testSpecification()
     {
-        $trueSpec = new BoolSpecification(true);
-        $falseSpec = new BoolSpecification(false);
+        $trueSpecification = new BooleanSpecification(true);
+        $falseSpecification = new BooleanSpecification(false);
 
-        $this->assertTrue($trueSpec->isSatisfiedBy((object) []));
-        $this->assertFalse($falseSpec->isSatisfiedBy((object) []));
+        $this->assertTrue($trueSpecification->isSatisfiedBy((object) []));
+        $this->assertFalse($falseSpecification->isSatisfiedBy((object) []));
     }
 
     public function testNotSpecification()
     {
-        $trueSpec = new BoolSpecification(true);
-        $falseSpec = new BoolSpecification(false);
+        $trueSpecification = new BooleanSpecification(true);
+        $falseSpecification = new BooleanSpecification(false);
 
-        $notTrueSpec = $trueSpec->not();
-        $notFalseSpec = $falseSpec->not();
+        $notTrueSpec = $trueSpecification->not();
+        $notFalseSpec = $falseSpecification->not();
 
-        $this->assertSame($trueSpec, $notTrueSpec->specification());
+        $this->assertSame($trueSpecification, $notTrueSpec->specification());
         $this->assertFalse($notTrueSpec->isSatisfiedBy((object) []));
         $this->assertTrue($notFalseSpec->isSatisfiedBy((object) []));
     }
 
     public function testAndSpecification()
     {
-        $trueSpec = new BoolSpecification(true);
-        $falseSpec = new BoolSpecification(false);
+        $trueSpecification = new BooleanSpecification(true);
+        $falseSpecification = new BooleanSpecification(false);
 
-        $trueAndTrueSpec = $trueSpec->and($trueSpec);
-        $trueAndFalseSpec = $trueSpec->and($falseSpec);
-
-        $this->assertSame($trueSpec, $trueAndFalseSpec->one());
-        $this->assertSame($falseSpec, $trueAndFalseSpec->other());
+        $trueAndTrueSpec = $trueSpecification->and($trueSpecification);
+        $trueAndFalseSpec = $trueSpecification->and($falseSpecification);
 
         $this->assertTrue($trueAndTrueSpec->isSatisfiedBy((object) []));
         $this->assertFalse($trueAndFalseSpec->isSatisfiedBy((object) []));
@@ -48,81 +49,85 @@ final class SpecificationTest extends TestCase
 
     public function testOrSpecification()
     {
-        $trueSpec = new BoolSpecification(true);
-        $falseSpec = new BoolSpecification(false);
+        $trueSpecification = new BooleanSpecification(true);
+        $falseSpecification = new BooleanSpecification(false);
 
-        $trueOrTrueSpec = $trueSpec->or($trueSpec);
-        $trueOrFalseSpec = $trueSpec->or($falseSpec);
+        $trueOrTrueSpec = $trueSpecification->or($trueSpecification);
+        $trueOrFalseSpec = $trueSpecification->or($falseSpecification);
 
-        $this->assertSame($trueSpec, $trueOrFalseSpec->one());
-        $this->assertSame($falseSpec, $trueOrFalseSpec->other());
         $this->assertTrue($trueOrTrueSpec->isSatisfiedBy((object) []));
         $this->assertTrue($trueOrFalseSpec->isSatisfiedBy((object) []));
     }
 
     public function testXorSpecification()
     {
-        $trueSpec = new BoolSpecification(true);
-        $falseSpec = new BoolSpecification(false);
+        $trueSpecification = new BooleanSpecification(true);
+        $falseSpecification = new BooleanSpecification(false);
 
-        $trueXorTrueSpec = $trueSpec->xor($trueSpec);
-        $trueXorFalseSpec = $trueSpec->xor($falseSpec);
-        $falseXorTrueSpec = $falseSpec->xor($trueSpec);
-        $falseXorFalseSpec = $falseSpec->xor($falseSpec);
+        $trueXorTrueSpec = $trueSpecification->xor($trueSpecification);
+        $trueXorFalseSpec = $trueSpecification->xor($falseSpecification);
+        $falseXorTrueSpec = $falseSpecification->xor($trueSpecification);
+        $falseXorFalseSpec = $falseSpecification->xor($falseSpecification);
 
-        $this->assertSame($trueSpec, $trueXorFalseSpec->one());
-        $this->assertSame($falseSpec, $trueXorFalseSpec->other());
         $this->assertFalse($trueXorTrueSpec->isSatisfiedBy((object) []));
         $this->assertTrue($trueXorFalseSpec->isSatisfiedBy((object) []));
         $this->assertTrue($falseXorTrueSpec->isSatisfiedBy((object) []));
         $this->assertFalse($falseXorFalseSpec->isSatisfiedBy((object) []));
     }
 
-//    public function testAnyOfSpecification()
-//    {
-//        $trueSpec = new BoolSpecification(true);
-//        $falseSpec = new BoolSpecification(false);
-//        $this->assertTrue((new AnyOfSpecification($trueSpec, $trueSpec, $trueSpec))->isSatisfiedBy(new stdClass));
-//        $this->assertFalse((new AnyOfSpecification($trueSpec, $trueSpec, $falseSpec))->isSatisfiedBy(new stdClass));
-//    }
-//
-//    public function testOneOfSpecification()
-//    {
-//        $trueSpec = new BoolSpecification(true);
-//        $falseSpec = new BoolSpecification(false);
-//        $this->assertFalse((new OneOfSpecification($falseSpec, $falseSpec, $falseSpec))->isSatisfiedBy(new stdClass));
-//        $this->assertTrue((new OneOfSpecification($falseSpec, $falseSpec, $trueSpec))->isSatisfiedBy(new stdClass));
-//    }
-//
-//    public function testNoneOfSpecification()
-//    {
-//        $trueSpec = new BoolSpecification(true);
-//        $falseSpec = new BoolSpecification(false);
-//        $this->assertTrue((new NoneOfSpecification($falseSpec, $falseSpec, $falseSpec))->isSatisfiedBy(new stdClass));
-//        $this->assertFalse((new NoneOfSpecification($falseSpec, $falseSpec, $trueSpec))->isSatisfiedBy(new stdClass));
-//    }
-//
-//    public function testCriteriaComposition()
-//    {
-//        $trueSpec = new BoolSpecification(true);
-//        $falseSpec = new BoolSpecification(false);
-//        $compositeSpec =
-//            new AnyOfSpecification(
-//                $trueSpec->and($falseSpec)->or($trueSpec)->and($falseSpec),
-//                new OneOfSpecification($trueSpec, $falseSpec, $trueSpec),
-//                $trueSpec
-//            );
-//        $this->assertSame(
-//            '((((1) AND (0)) OR (1)) AND (0)) AND ((1) OR (0) OR (1)) AND (1)',
-//            $compositeSpec->whereExpression('a')
-//        );
-//    }
-//
-//    /**
-//     * @expectedException \BadMethodCallException
-//     */
-//    public function testWhereExpressionIsNotSupported()
-//    {
-//        (new BoolSpecification(true))->not()->whereExpression('a');
-//    }
+    public function testAllOfSpecification()
+    {
+        $trueSpecification = new BooleanSpecification(true);
+        $falseSpecification = new BooleanSpecification(false);
+
+        $this->assertTrue(
+            (new AllOfSpecification($trueSpecification, $trueSpecification, $trueSpecification))
+                ->isSatisfiedBy((object) [])
+        );
+        $this->assertFalse(
+            (new AllOfSpecification($trueSpecification, $trueSpecification, $falseSpecification))
+                ->isSatisfiedBy((object) [])
+        );
+    }
+
+    public function testSomeOfSpecification()
+    {
+        $trueSpecification = new BooleanSpecification(true);
+        $falseSpecification = new BooleanSpecification(false);
+
+        $this->assertFalse(
+            (new SomeOfSpecification($falseSpecification, $falseSpecification, $falseSpecification))
+                ->isSatisfiedBy((object) [])
+        );
+        $this->assertTrue(
+            (new SomeOfSpecification($falseSpecification, $falseSpecification, $trueSpecification))
+                ->isSatisfiedBy((object) [])
+        );
+    }
+
+    public function testNoneOfSpecification()
+    {
+        $trueSpecification = new BooleanSpecification(true);
+        $falseSpecification = new BooleanSpecification(false);
+        $this->assertTrue(
+            (new NoneOfSpecification($falseSpecification, $falseSpecification, $falseSpecification))
+                ->isSatisfiedBy((object) [])
+        );
+        $this->assertFalse(
+            (new NoneOfSpecification($falseSpecification, $falseSpecification, $trueSpecification))
+                ->isSatisfiedBy((object) [])
+        );
+    }
+
+    public function testBinarySpecification()
+    {
+        $trueSpecification = new BooleanSpecification(true);
+        $falseSpecification = new BooleanSpecification(false);
+
+        $specification = new BinarySpecification($trueSpecification, $falseSpecification);
+
+        $this->assertSame($trueSpecification, $specification->one());
+        $this->assertSame($falseSpecification, $specification->other());
+        $this->assertSame([$trueSpecification, $falseSpecification], $specification->specifications());
+    }
 }

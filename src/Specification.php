@@ -4,15 +4,19 @@ declare(strict_types=1);
 
 namespace jbisbal\specification;
 
-/** @template T */
+use Closure;
+
+use function Functional\partial_right;
+
+/** @template Type */
 abstract class Specification
 {
-    /** @param T $object */
+    /** @param Type $object */
     abstract public function isSatisfiedBy($object): bool;
 
     /**
-     * @param Specification<T> $specification
-     * @return AndSpecification<T>
+     * @param Specification<Type> $specification
+     * @return AndSpecification<Type>
      */
     public function and(Specification $specification): AndSpecification
     {
@@ -20,8 +24,8 @@ abstract class Specification
     }
 
     /**
-     * @param Specification<T> $specification
-     * @return OrSpecification<T>
+     * @param Specification<Type> $specification
+     * @return OrSpecification<Type>
      * @SuppressWarnings(PHPMD.ShortMethodName)
      */
     public function or(Specification $specification): OrSpecification
@@ -30,19 +34,28 @@ abstract class Specification
     }
 
     /**
-     * @param Specification<T> $specification
-     * @return XorSpecification<T>
+     * @param Specification<Type> $specification
+     * @return XorSpecification<Type>
      */
     public function xor(Specification $specification): XorSpecification
     {
         return new XorSpecification($this, $specification);
     }
 
-    /**
-     * @return NotSpecification<T>
-     */
+    /** @return NotSpecification<Type> */
     public function not(): NotSpecification
     {
         return new NotSpecification($this);
+    }
+
+    /** @param Type $object */
+    protected function isSatisfiedByFn($object): Closure
+    {
+        return partial_right(
+            function (Specification $specification, $object) {
+                return $specification->isSatisfiedBy($object);
+            },
+            $object
+        );
     }
 }

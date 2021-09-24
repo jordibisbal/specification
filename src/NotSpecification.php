@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace jbisbal\specification;
 
 /**
- * @template T
- * @extends Specification<T>
+ * @template Type
+ * @extends Specification<Type>
  */
 final class NotSpecification extends Specification
 {
-    /** @var Specification<T> */
+    /** @var Specification<Type> */
     private $specification;
 
     /**
-     * @param Specification<T> $specification
+     * @param Specification<Type> $specification
      */
     public function __construct(Specification $specification)
     {
@@ -30,7 +30,7 @@ final class NotSpecification extends Specification
     }
 
     /**
-     * @return Specification<T>
+     * @return Specification<Type>
      */
     public function specification(): Specification
     {

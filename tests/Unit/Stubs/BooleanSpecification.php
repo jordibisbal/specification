@@ -9,7 +9,7 @@ use jbisbal\specification\Specification;
 /**
  * @extends Specification<bool>
  */
-class BoolSpecification extends Specification
+class BooleanSpecification extends Specification
 {
     private $bool;
 
@@ -18,6 +18,7 @@ class BoolSpecification extends Specification
         $this->bool = $bool;
     }
 
+    /** @inheritDoc */
     public function isSatisfiedBy($object): bool
     {
         return $this->bool;
