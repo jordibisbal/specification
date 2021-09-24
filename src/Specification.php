@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace jbisbal\specification;
 
 use Closure;
+use jbisbal\specification\Contracts\ExpressionBuilder;
+use jbisbal\specification\Exceptions\UnableToBuildExpression;
 
 use function Functional\partial_right;
 
@@ -57,5 +59,17 @@ abstract class Specification
             },
             $object
         );
+    }
+
+    /**
+     * @template BuilderType
+     * @param Type $object
+     * @param ExpressionBuilder<BuilderType> $expressionBuilder
+     * @return mixed
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     */
+    public function asExpression($object, ExpressionBuilder $expressionBuilder)
+    {
+        throw UnableToBuildExpression::becauseTheSpecificationHasNotImplementedAnyExpression();
     }
 }

@@ -5,14 +5,19 @@ declare(strict_types=1);
 namespace jbisbal\specification\Test\Unit;
 
 use jbisbal\specification\AllOfSpecification;
+use jbisbal\specification\Exceptions\UnableToBuildExpression;
+use jbisbal\specification\ExpressionBuilders\Identity;
 use jbisbal\specification\NoneOfSpecification;
 use jbisbal\specification\SomeOfSpecification;
 use jbisbal\specification\Test\Unit\Stubs\BinarySpecification;
 use jbisbal\specification\Test\Unit\Stubs\BooleanSpecification;
+use jbisbal\specification\Test\Unit\Stubs\IdentitySpecification;
 use PHPUnit\Framework\TestCase;
 
 final class SpecificationTest extends TestCase
 {
+    const A_VALUE = 'a value';
+
     public function testSpecification()
     {
         $trueSpecification = new BooleanSpecification(true);
@@ -129,5 +134,26 @@ final class SpecificationTest extends TestCase
         $this->assertSame($trueSpecification, $specification->one());
         $this->assertSame($falseSpecification, $specification->other());
         $this->assertSame([$trueSpecification, $falseSpecification], $specification->specifications());
+    }
+
+    public function testExceptionIsRaisedIfNoExpressionIsImplemented()
+    {
+        $trueSpecification = new BooleanSpecification(true);
+
+        $this->expectException(UnableToBuildExpression::class);
+        $this->expectExceptionMessage('Because the specification has not implemented expression()');
+
+        $trueSpecification->asExpression(self::A_VALUE, Identity::create());
+    }
+
+    public function testCanBuildAnExpression()
+    {
+        $identitySpecification = IdentitySpecification::create();
+        $identifyBuilder = Identity::create();
+
+        self::assertEquals(
+            self::A_VALUE,
+            $identitySpecification->asExpression(self::A_VALUE, $identifyBuilder)
+        );
     }
 }
