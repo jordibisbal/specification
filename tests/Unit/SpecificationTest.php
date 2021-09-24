@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
 
 final class SpecificationTest extends TestCase
 {
-    const A_VALUE = 'a value';
+    private const A_VALUE = 'a value';
 
     public function testSpecification()
     {
